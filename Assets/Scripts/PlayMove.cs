@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Photon.Pun;
 
-public class PlayMove : MonoBehaviour
+public class PlayMove : MonoBehaviourPun
 {
     // 이동 속력
     public float moveSpeed = 5f;
@@ -15,7 +16,6 @@ public class PlayMove : MonoBehaviour
 
     // 점프 초기 속력
     public float jumpPower = 3;
-    // 
 
     // 캐릭터 컨트롤러
     CharacterController cc;
