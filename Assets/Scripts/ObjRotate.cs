@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,9 @@ public class ObjRotate : MonoBehaviour
     public bool useRotX;
     public bool useRotY;
 
+    // PhotonView
+    public PhotonView pv;
+
     void Start()
     {
         
@@ -22,18 +26,22 @@ public class ObjRotate : MonoBehaviour
 
     void Update()
     {
-        // 1. 마우스의 움직임을 받아오자.
-        float mx = Input.GetAxis("Mouse X");
-        float my = Input.GetAxis("Mouse Y");
+        // 만약에 내 것이라면
+        if (pv.IsMine)
+        {
+            // 1. 마우스의 움직임을 받아오자.
+            float mx = Input.GetAxis("Mouse X");
+            float my = Input.GetAxis("Mouse Y");
 
-        // 2, 회전 값을 변경(누적)
-        if(useRotX) rotX += my * rotSpeed * Time.deltaTime;
-        if(useRotY) rotY += mx * rotSpeed * Time.deltaTime;
+            // 2, 회전 값을 변경(누적)
+            if (useRotX) rotX += my * rotSpeed * Time.deltaTime;
+            if (useRotY) rotY += mx * rotSpeed * Time.deltaTime;
 
-        // rotX 의 값을 제한(최소값, 최대값)
-        rotX = Mathf.Clamp(rotX, -80, 80);
+            // rotX 의 값을 제한(최소값, 최대값)
+            rotX = Mathf.Clamp(rotX, -80, 80);
 
-        // 3. 구해진 회전 값을 나의 회전값으로 세팅
-        transform.localEulerAngles = new Vector3(-rotX, rotY, 0);
+            // 3. 구해진 회전 값을 나의 회전값으로 세팅
+            transform.localEulerAngles = new Vector3(-rotX, rotY, 0);
+        }
     }
 }
