@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &614124321846273840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7239356749972549069}
+  m_Layer: 0
+  m_Name: FirePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7239356749972549069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614124321846273840}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.381, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7834277752157377116}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &882375343086447882
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7834277752157377116
 Transform:
   m_ObjectHideFlags: 0
@@ -280,6 +311,7 @@ Transform:
   m_Children:
   - {fileID: 9043125410830983794}
   - {fileID: 2319344379551301083}
+  - {fileID: 7239356749972549069}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 13.428, z: 0}
 --- !u!114 &1032966302783020103
@@ -336,6 +368,7 @@ MonoBehaviour:
   moveSpeed: 5
   jumpPower: 10
   cam: {fileID: 882375343086447882}
+  lerpSpeed: 50
 --- !u!114 &3973213878770699273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +404,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 298586244631288060}
   - {fileID: -2909346386909901292}
   sceneViewId: 0
   InstantiationId: 0
@@ -404,6 +438,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cubeFactory: {fileID: 0}
+  impactFactory: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753,
+    type: 3}
+  bulletFactory: {fileID: 2054436705722669247, guid: 6fb119f1d7a138443837ffd160f137c9,
+    type: 3}
+  firePos: {fileID: 7239356749972549069}
 --- !u!1 &5497994983024862986
 GameObject:
   m_ObjectHideFlags: 0

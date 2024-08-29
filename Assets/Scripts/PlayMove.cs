@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Photon.Pun;
+using Unity.Mathematics;
 
-public class PlayMove : MonoBehaviourPun
+public class PlayMove : MonoBehaviourPun, IPunObservable
 {
     // 이동 속력
     public float moveSpeed = 5f;
@@ -23,6 +24,14 @@ public class PlayMove : MonoBehaviourPun
     // 카메라
     public GameObject cam;
 
+    // 서버에서 넘어오는 위치값
+    Vector3 receivePos;
+    // 서버에서 넘어오는 회전값
+    quaternion receiveRot;
+
+    // 보정 속력
+    public float lerpSpeed = 50;
+
     void Start()
     {
         // 캐릭터 컨트롤러 가져오자
@@ -34,6 +43,13 @@ public class PlayMove : MonoBehaviourPun
         //{
         //    cam.SetActive(true);
         //}
+
+        if (photonView.IsMine)
+        {
+            // 마우스 잠그기
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
     }
 
     void Update()
@@ -95,6 +111,38 @@ public class PlayMove : MonoBehaviourPun
             //dir.y = yVelocity;
             //cc.Move(dir * Time.deltaTime);
             #endregion
+        }
+        // 나의 Player 아니라면
+        else
+        {
+            // 위치 보정
+            transform.position = Vector3.Lerp(transform.position,receivePos,Time.deltaTime * lerpSpeed);
+            // 회전 보정
+            transform.rotation = Quaternion.Lerp(transform.rotation, receiveRot, Time.deltaTime * lerpSpeed);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 만약에 내가 데이터를 보낼 수 있는 상태라면(내 것이라면)
+        if (stream.IsWriting)
+        {
+            // 나의 위치 값을 보낸다
+            stream.SendNext(transform.position);
+            // 나의 회전값을 보낸다
+            stream.SendNext(transform.rotation);
+        }
+        // 데이터를 받을 수 있는 상태라면 (내 것이 아니라면)
+        else if(stream.IsReading)
+        {
+            // 위치 값을 받자. 순서 중요함. 위치 먼저 보냈으면 위치 먼저
+            //transform.position = (Vector3)stream.ReceiveNext();
+            receivePos = (Vector3)stream.ReceiveNext();
+
+            // 회전 값을 받자.
+            //transform.rotation = (quaternion)stream.ReceiveNext();
+            receiveRot = (quaternion)stream.ReceiveNext();
+
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEditor.SearchService;
 
 public class SimpleConnectionMgr : MonoBehaviourPunCallbacks
 {
@@ -77,6 +76,7 @@ public class SimpleConnectionMgr : MonoBehaviourPunCallbacks
 
         // 멀티플레이 컨텐츠 즐길 수 있는 상태
         // GameScene으로 이동!
+        //SceneManager.LoadScene("");
         PhotonNetwork.LoadLevel("GameScene");
     }
 
