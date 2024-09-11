@@ -15,11 +15,11 @@ MonoBehaviour:
   AppSettings:
     AppIdRealtime: 257ec520-f121-49db-b83c-0e23d3553190
     AppIdFusion: 
-    AppIdChat: 
-    AppIdVoice: 
+    AppIdChat: e9162bd6-1215-473d-b995-7e0fa3e2e555
+    AppIdVoice: d3c759e8-fd3b-494f-82dc-10f00f06b790
     AppVersion: 1.0
     UseNameServer: 1
-    FixedRegion: kr
+    FixedRegion: asia
     Server: 
     Port: 0
     ProxyServer: 
@@ -42,6 +42,15 @@ MonoBehaviour:
   - CreateImpact
   - CreateCube
   - CreateBullet
+  - CreateExplo
+  - SetTriggger
+  - dfdf
+  - OnDamaged
+  - AddChat
+  - RpcUpdateHP
+  - CantHearYou
+  - ChangeColour
+  - HeresWhy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

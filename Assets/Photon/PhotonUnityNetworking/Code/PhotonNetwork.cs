@@ -3307,7 +3307,12 @@ namespace Photon.Pun
             }
         }
 
-        #endif
+        public static void Instantiate(string name, Quaternion rot)
+        {
+            throw new NotImplementedException();
+        }
+
+#endif
 
     }
 }

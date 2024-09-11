@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Photon.Pun;
 using Unity.Mathematics;
+using TMPro;
+using UnityEngine.Rendering.UI;
 
-public class PlayMove : MonoBehaviourPun, IPunObservable
+public class PlayMove : MonoBehaviourPun, IPunObservable //MonoBehaviour를 Pun 없이 쓸 경우에 privite Photonview photonview; void start() photonview = GetComponent<PhotonView>(); 해야함
+
 {
     // 이동 속력
     public float moveSpeed = 5f;
@@ -27,10 +30,24 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
     // 서버에서 넘어오는 위치값
     Vector3 receivePos;
     // 서버에서 넘어오는 회전값
-    quaternion receiveRot;
+    Quaternion receiveRot = Quaternion.identity;
 
     // 보정 속력
     public float lerpSpeed = 50;
+
+    // ani
+    Animator anim;
+
+    // AD 키를 입력 받을 변수
+    float h;
+    // WS 키를 입력 받을 변수
+    float v;
+
+    // LookPos
+    public Transform lookPos;
+
+    // 닉네임 UI
+    public TMP_Text nickName;
 
     void Start()
     {
@@ -38,8 +55,8 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
         cc = GetComponent<CharacterController>();
 
         // 내 것일 때만 카메라를 활성화
-        cam.SetActive(photonView.IsMine);
-        //if (photonView.IsMine)
+        cam.SetActive(photonView.IsMine); // 아래와 같음
+        //if (photonView.IsMine) // 위와 같음
         //{
         //    cam.SetActive(true);
         //}
@@ -49,6 +66,14 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
             // 마우스 잠그기
             Cursor.lockState = CursorLockMode.Locked;
         }
+
+        //애니메이터 가져오기
+        anim = GetComponentInChildren<Animator>();
+
+        //nickName.text = PhotonNetwork.NickName; // 이러면 자기 이름으로 다른 사람도 덮어씌움
+
+        // 닉네임 UI에 해당 캐릭터의 주인의 닉네임 설정
+        nickName.text = photonView.Owner.NickName;
         
     }
 
@@ -57,9 +82,15 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
         // 내 것일 때만 컨틀롤 하자!
         if (photonView.IsMine)
         {
+            // 마우스의 lockmode가 none 이면 (마우스 포인터 활성화 되어있다면) 함수 나가자
+            if (Cursor.lockState == CursorLockMode.None)
+            {
+                return;
+            }
+
             // 1. 키보드 WASD 키 입력을 받자.
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
+            h = Input.GetAxis("Horizontal");
+            v = Input.GetAxis("Vertical");
 
             // 2. 방향을 정하자.
             //Vector3 dir = transform.TransformDirection(new Vector3(h, 0, v).normalized);
@@ -111,6 +142,10 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
             //dir.y = yVelocity;
             //cc.Move(dir * Time.deltaTime);
             #endregion
+
+            //// anim 을 이용해서 h, v 값을 전달 -- 아닐때도 적용 하도록 밖으로 이동
+            //anim.SetFloat("DirH", h);
+            //anim.SetFloat("DirV", v);
         }
         // 나의 Player 아니라면
         else
@@ -120,6 +155,9 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
             // 회전 보정
             transform.rotation = Quaternion.Lerp(transform.rotation, receiveRot, Time.deltaTime * lerpSpeed);
         }
+        // anim 을 이용해서 h, v 값을 전달
+        anim.SetFloat("DirH", h);
+        anim.SetFloat("DirV", v);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -131,6 +169,13 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
             stream.SendNext(transform.position);
             // 나의 회전값을 보낸다
             stream.SendNext(transform.rotation);
+            // 나의 h 값
+            stream.SendNext(h);
+            // 나의 v 값
+            stream.SendNext(v);
+            // LookPos 의 위치값을 보낸다.
+            stream.SendNext(lookPos.position);
+
         }
         // 데이터를 받을 수 있는 상태라면 (내 것이 아니라면)
         else if(stream.IsReading)
@@ -141,8 +186,13 @@ public class PlayMove : MonoBehaviourPun, IPunObservable
 
             // 회전 값을 받자.
             //transform.rotation = (quaternion)stream.ReceiveNext();
-            receiveRot = (quaternion)stream.ReceiveNext();
-
+            receiveRot = (Quaternion)stream.ReceiveNext();
+            // 서버에서 전달 되는 h 값 받자
+            h = (float)stream.ReceiveNext();
+            // 서버에서 전달 되는 v 값 받자
+            v = (float)stream.ReceiveNext();
+            // LookPos 의 위치값을 받자.
+            lookPos.position = (Vector3)stream.ReceiveNext();
         }
     }
 }

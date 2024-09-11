@@ -31,7 +31,7 @@ public class SimpleConnectionMgr : MonoBehaviourPunCallbacks
     public void JoinLobby()
     {
         // 닉네임 설정
-        PhotonNetwork.NickName = "김오뷁";
+        PhotonNetwork.NickName = "김오뷁" + Random.Range(1, 1000); // 이름 뒤에 숫자 랜덤으로
         // 기본 Lobby 입장
         PhotonNetwork.JoinLobby();
     }
