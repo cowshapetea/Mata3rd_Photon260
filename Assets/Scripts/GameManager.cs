@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    int i = 0;
+    //int i = 0;
     void Update()
     {
         //i = i + 36;

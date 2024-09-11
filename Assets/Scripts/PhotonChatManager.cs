@@ -44,7 +44,8 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         if (Input.GetKeyDown(KeyCode.F5))
         {
             // 채널에서 나가자
-            string[] channels = { "전체" };
+            //string[] channels = { "전체" };
+            string[] channels = { currchannel };
             
             chatclient.Unsubscribe(channels);
         }
