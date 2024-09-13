@@ -81,11 +81,43 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         // 만약 s 의 길이가 0이면 함수를 나가자.
         if (s.Length == 0) return;
 
-        // 채팅을 보내자.
-        chatclient.PublishMessage(currchannel, s);
+        // 귓속말인지 판단
+        // /w 아이디 메시지 (/w 오렌지 안녕하세요 반갑습니다.)
+        
+        string [] splitChat = s.Split(" ", 3);
+        
+        if (splitChat[0] == "/w")
+        {
+            // 귓속말을 보내자
+            // splitchat[1] : 아이디, splitchat[2] : 내용
+            chatclient.SendPrivateMessage(splitChat[1], splitChat[2]);
+        }
+        else
+        {
+            // 채팅을 보내자.
+            chatclient.PublishMessage(currchannel,s);
+        }
+
+        //// 채팅을 보내자.
+        //chatclient.PublishMessage(currchannel, s);
 
         // 채팅 입력란 초기화
         inputChat.text = "";
+    }
+
+    void CreateChatItem(string sender, object message, Color color)
+    {
+        // ChatItem 생성 (Content 의 자식으로)
+        GameObject go = Instantiate(chatItemFactory, trContent);
+        // 생성된 게임오브젝트에서 ChatItem 컴포넌트 가져온다
+        ChatItem chatItem = go.GetComponent<ChatItem>();
+        // 가져온 컴포넌트에서 SetText 함수 실행
+        chatItem.SetText(sender + " : " + message);
+
+        // TMP_Text 컴포넌트 가져오자
+        TMP_Text text = go.GetComponent<TMP_Text>();
+        // 가져온 컴포넌트를 이용해서 색을 바꾸자
+        text.color = color;
     }
 
     public void DebugReturn(DebugLevel level, string message)
@@ -120,20 +152,25 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         {
             print(senders[i] + " : " + messages[i]);
 
-            // ChatItem 생성 (Content 의 자식으로)
-            GameObject go = Instantiate(chatItemFactory, trContent);
-            // 생성된 게임오브젝트에서 ChatItem 컴포넌트 가져온다
-            ChatItem chatItem = go.GetComponent<ChatItem>();
-            // 가져온 컴포넌트에서 SetText 함수 실행
-            chatItem.SetText(senders[i] + " : " + messages[i]);
+            CreateChatItem(senders[i],messages[i], Color.white);
+
+            // 아래부분 createchatitem 함수로 만듬
+            //// ChatItem 생성 (Content 의 자식으로)
+            //GameObject go = Instantiate(chatItemFactory, trContent);
+            //// 생성된 게임오브젝트에서 ChatItem 컴포넌트 가져온다
+            //ChatItem chatItem = go.GetComponent<ChatItem>();
+            //// 가져온 컴포넌트에서 SetText 함수 실행
+            //chatItem.SetText(senders[i] + " : " + messages[i]);
         }
 
        
         //throw new System.NotImplementedException();
     }
 
+    // 누군가 나한테 개인메시지를 보냈을때
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
+        CreateChatItem(sender, message, Color.blue);
         //throw new System.NotImplementedException();
     }
 

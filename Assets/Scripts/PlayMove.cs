@@ -49,8 +49,24 @@ public class PlayMove : MonoBehaviourPun, IPunObservable //MonoBehaviour를 Pun 
     // 닉네임 UI
     public TMP_Text nickName;
 
+    [PunRPC]
+    void RpcAddPlayer(int order)
+    {
+        // GameManager 에게 photonView 를 넘겨주자
+        GameManager.instance.AddPlayer(photonView, order);
+    }
+
     void Start()
     {
+        if (photonView.IsMine)
+        {
+            // 마우스 잠그기
+            Cursor.lockState = CursorLockMode.Locked;
+
+            // 내가 방에 들어온 순서를 모두에게 알려주자
+            photonView.RPC(nameof(RpcAddPlayer), RpcTarget.AllBuffered, ProjectMgr.Get().orderInRoom);
+        }
+
         // 캐릭터 컨트롤러 가져오자
         cc = GetComponent<CharacterController>();
 
@@ -61,11 +77,6 @@ public class PlayMove : MonoBehaviourPun, IPunObservable //MonoBehaviour를 Pun 
         //    cam.SetActive(true);
         //}
 
-        if (photonView.IsMine)
-        {
-            // 마우스 잠그기
-            Cursor.lockState = CursorLockMode.Locked;
-        }
 
         //애니메이터 가져오기
         anim = GetComponentInChildren<Animator>();

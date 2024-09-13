@@ -879,6 +879,7 @@ MonoBehaviour:
     type: 3}
   firePos: {fileID: 7239356749972549069}
   skillCenter: {fileID: 4971952645270380032}
+  isMyTurn: 0
 --- !u!114 &1159044953477390299
 MonoBehaviour:
   m_ObjectHideFlags: 0

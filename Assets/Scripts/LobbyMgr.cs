@@ -157,7 +157,7 @@ public class LobbyMgr : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         print("방 입장 완료");
-        PhotonNetwork.LoadLevel("GameScene");
+        PhotonNetwork.LoadLevel("WaitingScene");
     }
     
     //public override void OnjoinRoomFailed(short returnCode, string message)
@@ -217,7 +217,11 @@ public class LobbyMgr : MonoBehaviourPunCallbacks
             {
                 // allRoomInfo 추가
                 allRoomInfo.Add(roomList[i].Name, roomList[i]);
-                allRoomInfo[roomList[i].Name] = roomList[i];
+
+                if (roomList[i].RemovedFromList ==false)
+                {
+                    allRoomInfo[roomList[i].Name] = roomList[i];
+                }
             }
         }
     }
